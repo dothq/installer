@@ -1,0 +1,235 @@
+﻿<Window x:Class="dot_Installer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Dot installer" Background="{StaticResource BackgroundColor}" Height="450" Width="800" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" MouseDown="Window_MouseDown">
+    <Window.Resources>
+        <SolidColorBrush x:Key="ProgressBar.Progress" Color="#FF06B025"/>
+        <SolidColorBrush x:Key="ProgressBar.Background" Color="#FFE6E6E6"/>
+        <SolidColorBrush x:Key="ProgressBar.Border" Color="#FFBCBCBC"/>
+        <Style x:Key="ProgressBarStyle1" TargetType="{x:Type ProgressBar}">
+            <Setter Property="Foreground" Value="{StaticResource ProgressBar.Progress}"/>
+            <Setter Property="Background" Value="{StaticResource ProgressBar.Background}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource ProgressBar.Border}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ProgressBar}">
+                        <Grid x:Name="TemplateRoot">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup x:Name="CommonStates">
+                                    <VisualState x:Name="Determinate"/>
+                                    <VisualState x:Name="Indeterminate">
+                                        <Storyboard RepeatBehavior="Forever">
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleX)" Storyboard.TargetName="Animation">
+                                                <EasingDoubleKeyFrame KeyTime="0" Value="0.25"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:1" Value="0.25"/>
+                                                <EasingDoubleKeyFrame KeyTime="0:0:2" Value="0.25"/>
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <PointAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransformOrigin)" Storyboard.TargetName="Animation">
+                                                <EasingPointKeyFrame KeyTime="0" Value="-0.5,0.5"/>
+                                                <EasingPointKeyFrame KeyTime="0:0:1" Value="0.5,0.5"/>
+                                                <EasingPointKeyFrame KeyTime="0:0:2" Value="1.5,0.5"/>
+                                            </PointAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="4"/>
+                            <Rectangle x:Name="PART_Track" RadiusX="4" RadiusY="4"/>
+                            <Grid x:Name="PART_Indicator" ClipToBounds="true" HorizontalAlignment="Left">
+                                <Rectangle x:Name="Indicator" Fill="{TemplateBinding Foreground}" RadiusX="4" RadiusY="4"/>
+                                <Rectangle x:Name="Animation" Fill="{TemplateBinding Foreground}" RenderTransformOrigin="0.5,0.5" RadiusX="4" RadiusY="4">
+                                    <Rectangle.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Rectangle.RenderTransform>
+                                </Rectangle>
+                            </Grid>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Vertical">
+                                <Setter Property="LayoutTransform" TargetName="TemplateRoot">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsIndeterminate" Value="true">
+                                <Setter Property="Visibility" TargetName="Indicator" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid x:Name="MainGrid">
+        <Grid.FocusVisualStyle>
+            <Style />
+        </Grid.FocusVisualStyle>
+        <Grid x:Name="Splash_Screen" Visibility="Hidden" Grid.ColumnSpan="2">
+            <Label Foreground="{StaticResource ForegroundColor}" Content="⚫" HorizontalAlignment="Center" Padding="0"  Margin="0,184,0,94" HorizontalContentAlignment="Center" Width="800" VerticalAlignment="Center" FontSize="50" Height="172"/>
+        </Grid>
+        <Grid x:Name="ScreenOne" Visibility="Visible">
+            <Label Foreground="{StaticResource ForegroundColor}" Content="⚫" HorizontalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="800" VerticalAlignment="Bottom" FontSize="48" Margin="0,0,0,323" Height="68"/>
+            <Button x:Name="InstallDot" Content="Install Dot Browser" Margin="312,242,312,164" Background="#FF0070F3" IsTabStop="False" BorderBrush="{x:Null}" Foreground="#FFFFFFFF" Click="InstallDot_Click" FontSize="16">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="LightBlue" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource BackgroundBoxColor}" TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="5"/>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <Button x:Name="ViewMore" Content="⌵ View More" IsTabStop="False" HorizontalAlignment="Left" Margin="360,317,0,0" VerticalAlignment="Top" Width="86" Height="24" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{StaticResource ForegroundColor}" Click="ViewMore_Click">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="LightBlue" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource BackgroundBoxColor}" TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+            <Grid x:Name="ViewMoreContent" Visibility="Hidden">
+                <Label Foreground="{StaticResource ForegroundColor}" Content="Create Desktop Shortcut" HorizontalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="175" VerticalAlignment="Bottom" FontSize="16" Margin="293,0,332,55" Height="26"/>
+                <Label Foreground="{StaticResource ForegroundColor}" Content="Install Location" HorizontalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="127" FontSize="16" Margin="10,0,663,10" Height="26" VerticalAlignment="Bottom"/>
+                <Button HorizontalAlignment="Left" Margin="473,369,0,0" VerticalAlignment="Top" Width="25" Height="25" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="Button_Click">
+                    <Image x:Name="DesktopLnkCheckImage" Source="Assets/checkbox_light.png"/>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="LightBlue" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource BackgroundBoxColor}" TargetName="Border" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Rectangle HorizontalAlignment="Left" Height="26" Margin="142,414,0,0" VerticalAlignment="Top" Width="628"/>
+                <Border Margin="142,414,17,10" BorderThickness="1" BorderBrush="{StaticResource Border}" CornerRadius="5">
+                    <Grid>
+                        <TextBox x:Name="CustomPathInputBox" Foreground="{StaticResource ForegroundColor}" Background="{x:Null}" HorizontalAlignment="Left" Height="24" TextWrapping="Wrap" Text="Unable to get installation path" VerticalAlignment="Top" Width="553" FontSize="15" BorderBrush="{x:Null}"/>
+                        <Button Content="Browse" HorizontalAlignment="Left" Margin="553,0,-28,0" VerticalAlignment="Top" Width="86" Height="24" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="{StaticResource ForegroundColor}" Click="Browse_Click">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}">
+                                    <Setter Property="Background" Value="LightBlue" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type Button}">
+                                                <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="{StaticResource BackgroundBoxColor}" TargetName="Border" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Button Content="×" HorizontalAlignment="Left" Margin="753,0,0,0" VerticalAlignment="Top" Width="40" Click="Close_Click" Height="40" Foreground="{StaticResource ForegroundColor}" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="30">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="LightBlue" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource BackgroundBoxColor}" TargetName="Border" />
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+        <Grid x:Name="ScreenTwo" Visibility="Visible" Grid.ColumnSpan="2">
+            <Label Foreground="{StaticResource ForegroundColor}" Content="⚫" HorizontalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="800" VerticalAlignment="Bottom" FontSize="48" Margin="0,0,0,323" Height="68"/>
+            <Label Foreground="{StaticResource ForegroundColor}" Content="Installing..." HorizontalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="800" VerticalAlignment="Bottom" FontSize="24" Margin="0,0,0,251"/>
+            <ProgressBar Margin="71,268,72,161" x:Name="dotProgress" BorderBrush="{x:Null}" Height="12"  Minimum="0" Maximum="300" Foreground="#FF0070F3" Style="{DynamicResource ProgressBarStyle1}"/>
+            <Label x:Name="CurrentlyDoing" Foreground="{StaticResource ForegroundColor}" Content="Starting Installation" HorizontalAlignment="Center" Padding="0" HorizontalContentAlignment="Center" Width="800" VerticalAlignment="Bottom" FontSize="16" Margin="0,0,0,206"/>
+            <Border x:Name="Close" Visibility="Hidden" Margin="300,330,300,64" BorderBrush="{StaticResource ForegroundColor}" BorderThickness="2" CornerRadius="7">
+                <Button Content="Close" FontSize="32" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{StaticResource ForegroundColor}" Click="Close_Click">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Background" Value="LightBlue" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                        <Border x:Name="Border" Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="{StaticResource BackgroundBoxColor}" TargetName="Border" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Border>
+        </Grid>
+        <ProgressBar HorizontalAlignment="Left" Height="10" Margin="136,450,0,-10" VerticalAlignment="Top" Width="100"/>
+    </Grid>
+</Window>
